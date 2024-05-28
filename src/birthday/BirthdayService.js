@@ -1,12 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { Employee } from "./Employee";
+import { EmployeesRepository } from "./EmployeesRepository";
 
 export class BirthdayService {
   constructor() {}
 
   sendGreetings(ourDate, fileName, smtpUrl, smtpPort, transport) {
-    let employees = this.getEmployeesFromFile(ourDate,fileName)
+    let employeesRepository = new EmployeesRepository();
+    const employees= employeesRepository.getEmployeesFromFile(ourDate,fileName);
     
     employees.forEach((employee) => {
       const message = {
@@ -21,30 +23,4 @@ export class BirthdayService {
     });
   }
 
-  getEmployeesFromFile(ourDate,fileName)
-  {
-    const employeeDataFile  = fs.readFileSync(
-      path.resolve(__dirname, `${fileName}`), //`../${fileName}`),
-      "UTF-8"
-    );
-
-    // split the contents by new line
-    const lines = employeeDataFile.split(/\r?\n/);
-    lines.shift();
-    const employees = lines
-      .map((line) => this.createEmployeeFromLine(line))
-      .filter((employee) => employee.isBirthday(ourDate));
-    return employees;
-  }
-
-  createEmployeeFromLine(line) {
-    const employeeData = line.split(", ");
-    const employee = new Employee(
-      employeeData[1],
-      employeeData[0],
-      employeeData[2],
-      employeeData[3]
-    );
-    return employee;
-  }
 }
