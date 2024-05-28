@@ -23,13 +23,13 @@ export class BirthdayService {
 
   getEmployeesFromFile(ourDate,fileName)
   {
-    const data = fs.readFileSync(
+    const employeeDataFile  = fs.readFileSync(
       path.resolve(__dirname, `${fileName}`), //`../${fileName}`),
       "UTF-8"
     );
 
     // split the contents by new line
-    const lines = data.split(/\r?\n/);
+    const lines = employeeDataFile.split(/\r?\n/);
     lines.shift();
     const employees = lines
       .map((line) => this.createEmployeeFromLine(line))
